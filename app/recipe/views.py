@@ -15,7 +15,7 @@ class BaseRecipeAttrViewSet(GenericViewSet, ListModelMixin, CreateModelMixin):
 
     def get_queryset(self):
         """Return objects for the current authenticated user only"""
-        return self.queryset.filter(user=self.request.user).order_by('-name')
+        return self.queryset.filter(user=self.request.user).order_by('name')
 
     def perform_create(self, serializer):
         """Create a new object"""
@@ -44,3 +44,10 @@ class RecipeViewSet(ModelViewSet):
     def get_queryset(self):
         """Retrieve the recipes for the authenticated user"""
         return self.queryset.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        """Return appropriate serializer class"""
+        if self.action == 'retrieve':
+            return serializers.RecipeDetailSerializer
+
+        return self.serializer_class
